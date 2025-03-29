@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1594</width>
+    <height>826</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>1571</width>
+      <height>801</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:#989898;
+border-radius:20px;
+border:5px solid #64181C ;
+
+
+color:#ffffff;
+font-size:20px;
+font-weight:bold;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>1531</width>
+      <height>461</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:white;
+border-radius:20px;
+border:4px solid #64181C ;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>550</y>
+      <width>55</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+border-right:4px solid #F7F4F0;
+
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>980</x>
+      <y>550</y>
+      <width>55</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+border-right:4px solid #F7F4F0;
+
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>490</y>
+      <width>471</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+color:#F7F4F0;
+font-size:25px;
+border-bottom: 4px solid #F7F4F0;
+font-weight:bold;</string>
+    </property>
+    <property name="text">
+     <string>Harris Corner Detection</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>490</y>
+      <width>501</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+color:#F7F4F0;
+font-size:25px;
+border-bottom: 4px solid #F7F4F0;
+font-weight:bold;</string>
+    </property>
+    <property name="text">
+     <string>SIFT</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>1040</x>
+      <y>490</y>
+      <width>521</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+color:#F7F4F0;
+font-size:25px;
+border-bottom: 4px solid #F7F4F0;
+font-weight:bold;</string>
+    </property>
+    <property name="text">
+     <string>Image Matching</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="SquareContourButton">
+    <property name="geometry">
+     <rect>
+      <x>1050</x>
+      <y>580</y>
+      <width>221</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+ background-color: #64181C;
+ border-radius: 7px;
+ color: white;
+ font-size: 15px;
+ font-weight: 700;
+border:3px solid white;
+ letter-spacing: .8px;
+ line-height: 20px;
+ text-align: center;
+ text-transform: uppercase;
+
+
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>SSD</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="SquareContourButton_2">
+    <property name="geometry">
+     <rect>
+      <x>1320</x>
+      <y>580</y>
+      <width>221</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+ background-color: #64181C;
+ border-radius: 7px;
+ color: white;
+ font-size: 13px;
+ font-weight: 700;
+border:3px solid white;
+ letter-spacing: .8px;
+ line-height: 20px;
+ text-align: center;
+ text-transform: uppercase;
+
+
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>NCC</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="SquareContourButton_3">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>740</y>
+      <width>221</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+ background-color: #64181C;
+ border-radius: 7px;
+ color: white;
+ font-size: 13px;
+ font-weight: 700;
+border:3px solid white;
+ letter-spacing: .8px;
+ line-height: 20px;
+ text-align: center;
+ text-transform: uppercase;
+
+
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>Right Window</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="SquareContourButton_4">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>740</y>
+      <width>221</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+ background-color: #64181C;
+ border-radius: 7px;
+ color: white;
+ font-size: 13px;
+ font-weight: 700;
+border:3px solid white;
+ letter-spacing: .8px;
+ line-height: 20px;
+ text-align: center;
+ text-transform: uppercase;
+
+
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>Left window</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ApplyContourButton">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>740</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+ background-color: #64181C;
+ border-radius: 7px;
+ color: white;
+ font-size: 13px;
+ font-weight: 700;
+border:3px solid white;
+ letter-spacing: .8px;
+ line-height: 20px;
+ text-align: center;
+ text-transform: uppercase;
+	}
+
+QPushButton:hover{
+	
+	background-color:#7D4047;
+	}
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>Save</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ApplyContourButton_2">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>740</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+ background-color: #64181C;
+ border-radius: 7px;
+ color: white;
+ font-size: 13px;
+ font-weight: 700;
+border:3px solid white;
+ letter-spacing: .8px;
+ line-height: 20px;
+ text-align: center;
+ text-transform: uppercase;
+	}
+
+QPushButton:hover{
+	
+	background-color:#7D4047;
+	}
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>Reset</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ApplyContourButton_3">
+    <property name="geometry">
+     <rect>
+      <x>1040</x>
+      <y>740</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+ background-color: #64181C;
+ border-radius: 7px;
+ color: white;
+ font-size: 13px;
+ font-weight: 700;
+border:3px solid white;
+ letter-spacing: .8px;
+ line-height: 20px;
+ text-align: center;
+ text-transform: uppercase;
+	}
+
+QPushButton:hover{
+	
+	background-color:#7D4047;
+	}
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>Load Image</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>700</y>
+      <width>1531</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+border-bottom:4px solid #F7F4F0;
+
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>660</y>
+      <width>261</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+color:#ffffff;
+font-size:20px;
+font-weight:bold;</string>
+    </property>
+    <property name="text">
+     <string>Computitional Time</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Gaussian">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>670</y>
+      <width>31</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+color:#ffffff;
+font-size:15px;
+font-weight:bold;</string>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>670</y>
+      <width>211</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+color:#ffffff;
+font-size:20px;
+font-weight:bold;</string>
+    </property>
+    <property name="text">
+     <string>Computitional Time</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>670</y>
+      <width>281</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+color:#ffffff;
+font-size:20px;
+font-weight:bold;</string>
+    </property>
+    <property name="text">
+     <string>Computitional Time</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Gaussian_2">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>670</y>
+      <width>41</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+color:#ffffff;
+font-size:15px;
+font-weight:bold;</string>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Gaussian_3">
+    <property name="geometry">
+     <rect>
+      <x>1300</x>
+      <y>670</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:transparent;
+color:#ffffff;
+font-size:15px;
+font-weight:bold;</string>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ChainCodeButton">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>580</y>
+      <width>231</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+ background-color: #64181C;
+ border-radius: 7px;
+ color: white;
+ font-size: 15px;
+ font-weight: 700;
+border:3px solid white;
+ letter-spacing: .8px;
+ line-height: 20px;
+ text-align: center;
+ text-transform: uppercase;
+	}
+
+QPushButton:hover{
+	
+	background-color:#7D4047;
+	}
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>Apply Harris Detection</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ChainCodeButton_2">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>580</y>
+      <width>251</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+ background-color: #64181C;
+ border-radius: 7px;
+ color: white;
+ font-size: 15px;
+ font-weight: 700;
+border:3px solid white;
+ letter-spacing: .8px;
+ line-height: 20px;
+ text-align: center;
+ text-transform: uppercase;
+	}
+
+QPushButton:hover{
+	
+	background-color:#7D4047;
+	}
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>Apply SIFT</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
