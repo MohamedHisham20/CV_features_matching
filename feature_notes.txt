@@ -1,0 +1,13 @@
+######Image combinations for testing:######
+- gof or poa + hp4
+- box2 + boxes
+- eye + marilyn monroe
+- linda + linda (100% match not really useful)
+
+
+####Notes:#####
+- number of correct matches a bit low.
+- add threshold slider in ui to control number of matches?
+- need to find a case to differentiate between ssd and ncc better.
+- final images need to be RGB. 
+- matching w/o cv2 functions takes too long so we can't use big images bc they generate too many keypoints (less than 100kb is good)!!!
