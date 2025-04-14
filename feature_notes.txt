@@ -1,13 +1,22 @@
 ######Image combinations for testing:######
 - gof or poa + hp4
 - box2 + boxes
-- eye + marilyn monroe
+- eye + marilyn monroe  (m4 a7san 7aga bardo)
 - linda + linda (100% match not really useful)
 
 
 ####Notes:#####
-- number of correct matches a bit low.
-- add threshold slider in ui to control number of matches?
+- number of correct matches a bit low. XXXXXX DONE
+- add threshold slider in ui to control number of matches? XXXXXX DONE
 - need to find a case to differentiate between ssd and ncc better.
-- final images need to be RGB. 
+- final images need to be RGB. XXXXXX DONE
 - matching w/o cv2 functions takes too long so we can't use big images bc they generate too many keypoints (less than 100kb is good)!!!
+
+
+- [NEW ISSUE]: el matches m4 btzbot lama bazabat el sorten 3ala 2 subplots, f keda bylza2o f ba3d f plot wada lama agy a match.
+- 1 canvas, load 2 images. for harris law hnt8l 3ala image wada momken mn window left w right deh nwsl el radio button bel 
+                                                        self.image1 or self.image2.
+
+- so far i added el load (2 images) we connected all feature matching bits bl ui, fadel bas el computation time + wyt tabeetat fl 4akl wl thresholds
+- ALL matching controls are LOCKED l7ad ma el butto bt3 APPLY SIFT clicked at least once.
+- for switching between ssd and ncc, wait till matching is done, then it will take a few secs to recolect and apply 

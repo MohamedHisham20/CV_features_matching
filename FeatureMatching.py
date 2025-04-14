@@ -1,18 +1,24 @@
 import cv2
+from matplotlib.figure import Figure
 import numpy as np
 import matplotlib.pyplot as plt
 from tkinter import filedialog, Tk
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from PyQt5.QtWidgets import QVBoxLayout, QWidget
 
-class Matching:
+class Matching():    
     
-    def __init__(self, image1, keypoints1, descriptor1, image2, keypoints2, descriptor2):
+    def __init__(self, image1, keypoints1, descriptor1, image2, keypoints2, descriptor2, method):
         self.image1 = image1
         self.keypoints1 = keypoints1
         self.descriptor1 = descriptor1
         self.image2 = image2
         self.keypoints2 = keypoints2
         self.descriptor2 = descriptor2
+        self.method = method
         self.matches = []
+        self.canvas = FigureCanvas(plt.figure(figsize=(80, 10)))
+
 
     ###### built in sift bypass for now
     @staticmethod
@@ -24,18 +30,18 @@ class Matching:
             raise ValueError("One or both image paths are invalid or the images could not be loaded.")
         
         # Convert to grayscale 
-        image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
-        image2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
+        grey1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+        grey2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
         sift = cv2.SIFT_create()
 
-        keypoints1, descriptors1 = sift.detectAndCompute(image1, None)
-        keypoints2, descriptors2 = sift.detectAndCompute(image2, None)
+        keypoints1, descriptors1 = sift.detectAndCompute(grey1, None)
+        keypoints2, descriptors2 = sift.detectAndCompute(grey2, None)
 
         print(f"Extracted {len(keypoints1)} keypoints from image 1")
         print(f"Extracted {len(keypoints2)} keypoints from image 2")
 
         return image1, keypoints1, descriptors1, image2, keypoints2, descriptors2
-
+    
     def match_ssd(self, threshold=30000):
         matches = []
         for d1 in self.descriptor1:
@@ -73,35 +79,44 @@ class Matching:
         return matches
 
     def visualize_matches(self, good_matches):
-        h1, w1 = self.image1.shape
-        h2, w2 = self.image2.shape
+        h1, w1 = self.image1.shape[:2]
+        h2, w2 = self.image2.shape[:2]
+
         canvas_height = max(h1, h2)
         canvas_width = w1 + w2
         canvas = np.zeros((canvas_height, canvas_width, 3), dtype=np.uint8)
 
-        img1_color = cv2.cvtColor(self.image1, cv2.COLOR_GRAY2RGB)
-        img2_color = cv2.cvtColor(self.image2, cv2.COLOR_GRAY2RGB)
+        if len(self.image1.shape) == 2:
+            img1_color = cv2.cvtColor(self.image1, cv2.COLOR_GRAY2RGB)
+        else:
+            img1_color = cv2.cvtColor(self.image1, cv2.COLOR_BGR2RGB)
+            
+        if len(self.image2.shape) == 2:
+            img2_color = cv2.cvtColor(self.image2, cv2.COLOR_GRAY2RGB)
+        else:
+            img2_color = cv2.cvtColor(self.image2, cv2.COLOR_BGR2RGB)
 
         canvas[:h1, :w1, :] = img1_color
         canvas[:h2, w1:, :] = img2_color
 
-        plt.figure(figsize=(15, 10))
-        plt.imshow(canvas)
-        
+        ax = self.canvas.figure.add_subplot(111)
+        ax.imshow(canvas)
+        ax.axis('off')  
+
         for i, match_idx in enumerate(good_matches):
             if match_idx is not None:
                 pt1 = tuple(map(int, self.keypoints1[i].pt))
                 pt2 = tuple(map(int, self.keypoints2[match_idx].pt))
                 pt2 = (int(pt2[0] + w1), int(pt2[1]))  
-                color = np.random.rand(3,)  
+                color = np.random.rand(3,)
 
-                plt.plot([pt1[0], pt2[0]], [pt1[1], pt2[1]], color=color, linewidth=0.75)
-                plt.scatter(*pt1,  s=20, marker='o', color=color)
-                plt.scatter(*pt2,  s=20, marker='o', color=color)
+                ax.plot([pt1[0], pt2[0]], [pt1[1], pt2[1]], color=color, linewidth=0.75)
+                ax.scatter(*pt1, s=20, marker='o', color=color)  
+                ax.scatter(*pt2, s=20, marker='o', color=color)  
 
-        plt.axis('off')
-        plt.title('Feature Matches')
-        plt.show()
+        self.canvas.draw_idle()
+        return self.canvas
+
 
 
 #####for testing
@@ -125,5 +140,5 @@ def select_and_run():
     print(f"Number of good matches: {len(good_matches)}")
     matcher.visualize_matches(good_matches)
 
-if __name__ == "__main__":
-    select_and_run()
+# if __name__ == "__main__":
+#     select_and_run()
