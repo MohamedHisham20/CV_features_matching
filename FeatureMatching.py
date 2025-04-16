@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from tkinter import filedialog, Tk
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtWidgets import QVBoxLayout, QWidget
+import time
 
 class Matching():    
     
@@ -17,7 +18,7 @@ class Matching():
         self.descriptor2 = descriptor2
         self.method = method
         self.matches = []
-        self.canvas = FigureCanvas(plt.figure(figsize=(80, 10)))
+        self.canvas = FigureCanvas(plt.figure(figsize=(100, 20)))
 
 
     ###### built in sift bypass for now
@@ -44,6 +45,8 @@ class Matching():
     
     def match_ssd(self, threshold=30000):
         matches = []
+        total_time = 0
+        start_time = time.time()
         for d1 in self.descriptor1:
                 distances = []
                 for d2 in self.descriptor2:
@@ -56,13 +59,15 @@ class Matching():
                     matches.append(best_match_index)
                 else:
                     matches.append(None)  
-        
         print(f"Number of good matches : {len(matches)}")
-    
-        return matches
+        end_time = time.time()
+        total_time = end_time - start_time
+        return matches, total_time
     
     def match_ncc(self, threshold = 0.97):
         matches = []
+        total_time = 0 
+        start_time = time.time()
         for d1 in self.descriptor1:
             correlations = []
             for d2 in self.descriptor2:
@@ -76,7 +81,10 @@ class Matching():
                 matches.append(best_match_index)
             else:
                 matches.append(None)
-        return matches
+        print(f"Number of good matches : {len(matches)}")
+        end_time = time.time()
+        total_time = end_time - start_time
+        return matches, total_time
 
     def visualize_matches(self, good_matches):
         h1, w1 = self.image1.shape[:2]
@@ -136,8 +144,9 @@ def select_and_run():
 
     matcher = Matching(image1, keypoints1, descriptors1, image2, keypoints2, descriptors2)
 
-    good_matches = matcher.match_ssd()
+    good_matches, time = matcher.match_ssd()
     print(f"Number of good matches: {len(good_matches)}")
+    print(f"Time taken: {time:.2f} seconds")
     matcher.visualize_matches(good_matches)
 
 # if __name__ == "__main__":

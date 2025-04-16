@@ -34,16 +34,18 @@ class MainApp(QMainWindow):
         self.ssd_slider.setMaximum(60000)
         self.ssd_slider.setValue(20000)
         self.ssd_slider.setEnabled(False)
-        self.ssd_slider.setSingleStep(1000)
+        self.ssd_slider.setSingleStep(5000)
         self.ssd_slider.valueChanged.connect(self.ssd_threshold_control)
+        self.ssd_slider.valueChanged.connect(lambda value: self.match_features("ssd"))
         
         self.ncc_slider = self.ui.findChild(QSlider,"ncc_slider")
-        self.ncc_slider.setMinimum(0)
+        self.ncc_slider.setMinimum(50)
         self.ncc_slider.setMaximum(100)
         self.ncc_slider.setValue(97)
         self.ncc_slider.setEnabled(False)
-        self.ncc_slider.setSingleStep(1)
+        self.ncc_slider.setSingleStep(3)
         self.ncc_slider.valueChanged.connect(self.ncc_threshold_control)
+        self.ncc_slider.valueChanged.connect(lambda value: self.match_features("ncc"))
         
         self.ssd_rb = self.ui.findChild(QRadioButton,"ssd_radio_button")
         self.ssd_rb.setEnabled(False)
@@ -52,6 +54,11 @@ class MainApp(QMainWindow):
         self.ncc_rb = self.ui.findChild(QRadioButton,"ncc_radio_button")
         self.ncc_rb.setEnabled(False)
         self.ncc_rb.clicked.connect(self.ncc_rb_clicked)
+        
+        self.ssd_threshold = self.ssd_slider.value()
+        self.ncc_threshold = self.ncc_slider.value()/100.0
+        
+        self.matching_time_label = self.ui.findChild(QLabel,"matching_time_label")
         
     def load_button_clicked(self):
         file_path1 = filedialog.askopenfilename(title="Select Image 1")
@@ -71,17 +78,18 @@ class MainApp(QMainWindow):
 
         
     def ssd_threshold_control(self):
-        value = self.ssd_slider.value()
-        return value
+        self.ssd_threshold = self.ssd_slider.value()
+        
     
     def ncc_threshold_control(self):
-        value = self.ncc_slider.value()/100.0
-        return value
+        self.ncc_threshold = self.ncc_slider.value()/100.0
+        
     
     def ssd_rb_clicked(self):
         if self.sift_done:
             self.ssd_slider.setEnabled(True)
             self.ncc_slider.setEnabled(False)
+            self.matching_time_label.setText("0 seconds")
             # self.ssd_rb.setChecked(True)
             # self.ncc_rb.setChecked(False)
             self.match_features("ssd")
@@ -97,6 +105,7 @@ class MainApp(QMainWindow):
         if self.sift_done:
             self.ncc_slider.setEnabled(True)
             self.ssd_slider.setEnabled(False)
+            self.matching_time_label.setText("0 seconds")
             # self.ncc_rb.setChecked(True)
             # self.ssd_rb.setChecked(False)
             self.match_features("ncc")
@@ -116,11 +125,11 @@ class MainApp(QMainWindow):
         matcher = Matching(self.image1, keypoints1, descriptor1, self.image2, keypoints2, descriptor2, method)
         
         if method == "ssd":
-            threshold = self.ssd_threshold_control()
-            matches = matcher.match_ssd(threshold)
+            matches, time = matcher.match_ssd(self.ssd_threshold)
         elif method == "ncc":
-            threshold = self.ncc_threshold_control()
-            matches = matcher.match_ncc(threshold)
+            matches, time = matcher.match_ncc(self.ncc_threshold)
+        
+        self.matching_time_label.setText(f" {time:.2f} seconds")
 
         layout = self.main_widget.layout()
         if layout is not None:

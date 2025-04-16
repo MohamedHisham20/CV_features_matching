@@ -15,8 +15,10 @@
 
 - [NEW ISSUE]: el matches m4 btzbot lama bazabat el sorten 3ala 2 subplots, f keda bylza2o f ba3d f plot wada lama agy a match.
 - 1 canvas, load 2 images. for harris law hnt8l 3ala image wada momken mn window left w right deh nwsl el radio button bel 
-                                                        self.image1 or self.image2.
+                                                        self.image1 or self.image2
+- fadel bas el computation time + 4wyt tabeetat fl thresholds XXXXXX DONE
 
-- so far i added el load (2 images) we connected all feature matching bits bl ui, fadel bas el computation time + wyt tabeetat fl 4akl wl thresholds
+
+### walkthrough:####
 - ALL matching controls are LOCKED l7ad ma el butto bt3 APPLY SIFT clicked at least once.
 - for switching between ssd and ncc, wait till matching is done, then it will take a few secs to recolect and apply 
