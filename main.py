@@ -13,12 +13,12 @@ class MainApp(QMainWindow):
         super().__init__()
         self.ui = uic.loadUi("Task03.ui")
         
-        ##### bc of resolution issues for my laptop, comment out if not needed!!!
-        scroll = QScrollArea()
-        scroll.setWidget(self.ui)
-        self.setCentralWidget(scroll)
-        self.resize(1360, 768) 
-        ######## end of resolution fix 
+        # ##### bc of resolution issues for my laptop, comment out if not needed!!!
+        # scroll = QScrollArea()
+        # scroll.setWidget(self.ui)
+        # self.setCentralWidget(scroll)
+        # self.resize(1360, 768) 
+        # ######## end of resolution fix 
         
         self.main_widget = self.ui.findChild(QWidget, "widget")
         self.load_btn = self.ui.findChild(QPushButton, "load_button")
@@ -35,15 +35,17 @@ class MainApp(QMainWindow):
         self.ssd_slider.setValue(20000)
         self.ssd_slider.setEnabled(False)
         self.ssd_slider.setSingleStep(5000)
+        self.ssd_slider.setPageStep(5000)
         self.ssd_slider.valueChanged.connect(self.ssd_threshold_control)
         self.ssd_slider.valueChanged.connect(lambda value: self.match_features("ssd"))
         
         self.ncc_slider = self.ui.findChild(QSlider,"ncc_slider")
-        self.ncc_slider.setMinimum(50)
+        self.ncc_slider.setMinimum(55)
         self.ncc_slider.setMaximum(100)
-        self.ncc_slider.setValue(97)
+        self.ncc_slider.setValue(95)
         self.ncc_slider.setEnabled(False)
-        self.ncc_slider.setSingleStep(3)
+        self.ncc_slider.setSingleStep(5)
+        self.ncc_slider.setPageStep(5)
         self.ncc_slider.valueChanged.connect(self.ncc_threshold_control)
         self.ncc_slider.valueChanged.connect(lambda value: self.match_features("ncc"))
         
@@ -57,6 +59,9 @@ class MainApp(QMainWindow):
         
         self.ssd_threshold = self.ssd_slider.value()
         self.ncc_threshold = self.ncc_slider.value()/100.0
+        
+        self.ssd_label = self.ui.findChild(QLabel,"ssd_label")
+        self.ncc_label = self.ui.findChild(QLabel,"ncc_label")
         
         self.matching_time_label = self.ui.findChild(QLabel,"matching_time_label")
         
@@ -78,11 +83,15 @@ class MainApp(QMainWindow):
 
         
     def ssd_threshold_control(self):
-        self.ssd_threshold = self.ssd_slider.value()
+        value = self.ssd_slider.value()
+        self.ssd_threshold = value
+        self.ssd_label.setText(f"{self.ssd_threshold:.0f}") 
         
     
     def ncc_threshold_control(self):
-        self.ncc_threshold = self.ncc_slider.value()/100.0
+        value = self.ncc_slider.value()
+        self.ncc_threshold = value / 100.0
+        self.ncc_label.setText(f"{self.ncc_threshold *100:.0f}%")
         
     
     def ssd_rb_clicked(self):
@@ -141,7 +150,6 @@ class MainApp(QMainWindow):
         else:
             layout = QVBoxLayout()
             self.main_widget.setLayout(layout)
-
         canvas = matcher.visualize_matches(matches)
         layout.addWidget(canvas)
         self.main_widget.setLayout(layout)

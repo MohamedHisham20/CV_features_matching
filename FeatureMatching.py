@@ -6,10 +6,12 @@ from tkinter import filedialog, Tk
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtWidgets import QVBoxLayout, QWidget
 import time
+from PyQt5 import uic
 
 class Matching():    
     
     def __init__(self, image1, keypoints1, descriptor1, image2, keypoints2, descriptor2, method):
+        self.ui = uic.loadUi("Task03.ui")
         self.image1 = image1
         self.keypoints1 = keypoints1
         self.descriptor1 = descriptor1
@@ -18,7 +20,10 @@ class Matching():
         self.descriptor2 = descriptor2
         self.method = method
         self.matches = []
-        self.canvas = FigureCanvas(plt.figure(figsize=(100, 20)))
+        self.main_widget = self.ui.findChild(QWidget, "widget")
+        # self.figure = Figure()
+        self.canvas = FigureCanvas(Figure(figsize=(13, 8)))
+        self.canvas.figure.clear()
 
 
     ###### built in sift bypass for now
@@ -87,6 +92,8 @@ class Matching():
         return matches, total_time
 
     def visualize_matches(self, good_matches):
+        self.canvas.figure.clf()
+        self.canvas.figure.clear()
         h1, w1 = self.image1.shape[:2]
         h2, w2 = self.image2.shape[:2]
 
@@ -107,7 +114,18 @@ class Matching():
         canvas[:h1, :w1, :] = img1_color
         canvas[:h2, w1:, :] = img2_color
 
+        # ax  that takes up the whole canvas
         ax = self.canvas.figure.add_subplot(111)
+        ax.clear()
+        ax.set_xlim(0, canvas_width)
+        ax.set_ylim(canvas_height, 0)
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_aspect('equal')
+        ax.set_facecolor('white')
+        ax.set_title("Matches", fontsize=14)
+        ax.text(10, 20, f"Matches: {sum(1 for m in good_matches if m is not None)}", 
+        color='black', fontsize=12, bbox=dict(facecolor='white', alpha=0.5))
         ax.imshow(canvas)
         ax.axis('off')  
 
