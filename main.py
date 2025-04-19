@@ -13,12 +13,12 @@ class MainApp(QMainWindow):
         super().__init__()
         self.ui = uic.loadUi("Task03.ui")
         
-        # ##### bc of resolution issues for my laptop, comment out if not needed!!!
-        # scroll = QScrollArea()
-        # scroll.setWidget(self.ui)
-        # self.setCentralWidget(scroll)
-        # self.resize(1360, 768) 
-        # ######## end of resolution fix 
+        ##### bc of resolution issues for my laptop, comment out if not needed!!!
+        scroll = QScrollArea()
+        scroll.setWidget(self.ui)
+        self.setCentralWidget(scroll)
+        self.resize(1360, 768) 
+        ######## end of resolution fix 
         
         self.main_widget = self.ui.findChild(QWidget, "widget")
         self.load_btn = self.ui.findChild(QPushButton, "load_button")
