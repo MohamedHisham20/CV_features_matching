@@ -1,4 +1,4 @@
-
+from pysift import computeKeypointsAndDescriptors
 import sys
 from tkinter import filedialog
 from PyQt5.QtWidgets import QMainWindow, QApplication, QScrollArea, QWidget ,QVBoxLayout, QRadioButton, QSlider, QLabel, QPushButton, QLineEdit, QCheckBox, QHBoxLayout
@@ -127,9 +127,11 @@ class MainApp(QMainWindow):
             self.ssd_slider.setEnabled(False)
             
     def match_features(self, method):
-        image1, keypoints1, descriptor1, image2, keypoints2, descriptor2 = Matching.extract_sift_features(
-            self.image1_path, self.image2_path
-        )
+        # image1, keypoints1, descriptor1, image2, keypoints2, descriptor2 = Matching.extract_sift_features(
+        #     self.image1_path, self.image2_path
+        # )
+        keypoints1, descriptor1 = computeKeypointsAndDescriptors(self.image1)
+        keypoints2, descriptor2 = computeKeypointsAndDescriptors(self.image2)
         
         matcher = Matching(self.image1, keypoints1, descriptor1, self.image2, keypoints2, descriptor2, method)
         
