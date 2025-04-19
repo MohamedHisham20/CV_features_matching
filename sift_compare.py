@@ -13,8 +13,17 @@ def test():
 
     print(f"[DEBUG] Loaded test image with shape {image.shape}")
 
+    # start time calculations
+    start_time = cv.getTickCount()
+    print(f"[DEBUG] Starting SIFT computation...{start_time}")
     # Run custom SIFT implementation
     keypoints, descriptors = computeKeypointsAndDescriptors(image)
+    end_time = cv.getTickCount()
+    time_taken = (end_time - start_time) / cv.getTickFrequency()
+    print(f"[DEBUG] SIFT computation completed in {time_taken:.4f} seconds")
+    print(f"[DEBUG] Number of keypoints detected: {len(keypoints)}")
+    print(f"[DEBUG] Descriptor shape: {descriptors.shape}")
+
 
     # Draw custom keypoints
     img_custom = image.copy()
