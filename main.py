@@ -26,8 +26,13 @@ class MainApp(QMainWindow):
         
         ## sift flag, to make sure feature matching options are off until sift is done.
         self.sift_done = False
+        self.sift_time_label = self.ui.findChild(QLabel,"Gaussian_2")
         self.sift_button = self.ui.findChild(QPushButton,"sift_button")
+
         self.sift_button.clicked.connect(self.sift_button_clicked)
+
+        self.keypoints1, self.keypoints2 = None, None
+        self.descriptors1, self.descriptors2 = None, None
         
         self.ssd_slider = self.ui.findChild(QSlider,"ssd_slider")
         self.ssd_slider.setMinimum(0)
@@ -130,8 +135,10 @@ class MainApp(QMainWindow):
         # image1, keypoints1, descriptor1, image2, keypoints2, descriptor2 = Matching.extract_sift_features(
         #     self.image1_path, self.image2_path
         # )
-        keypoints1, descriptor1 = computeKeypointsAndDescriptors(self.image1)
-        keypoints2, descriptor2 = computeKeypointsAndDescriptors(self.image2)
+        # gray_image_1 = cv2.cvtColor(self.image1, cv2.COLOR_BGR2GRAY)
+        # gray_image_2 = cv2.cvtColor(self.image2, cv2.COLOR_BGR2GRAY)
+        keypoints1, descriptor1 = self.keypoints1, self.descriptors1
+        keypoints2, descriptor2 = self.keypoints2, self.descriptors2
         
         matcher = Matching(self.image1, keypoints1, descriptor1, self.image2, keypoints2, descriptor2, method)
         
@@ -199,15 +206,63 @@ class MainApp(QMainWindow):
         figure.tight_layout()
         canvas.draw()
 
-        
-        
-    
     def sift_button_clicked(self):
-        # Call the SIFT feature extraction method here
+        # Convert to grayscale
+        gray_image_1 = cv2.cvtColor(self.image1, cv2.COLOR_BGR2GRAY)
+        gray_image_2 = cv2.cvtColor(self.image2, cv2.COLOR_BGR2GRAY)
+
+        # Initialize
+        time_string = " "
+        sift_images = [gray_image_1, gray_image_2]
+        original_images = [self.image1, self.image2]
+        keypoints_list = []
+        descriptors_list = []
+        result_images = []
+
+        for i in range(2):
+            gray = sift_images[i]
+            original = original_images[i]
+
+            if gray is None:
+                print(f"[ERROR] Image {i + 1} is None.")
+                continue
+
+            print(f"[DEBUG] Loaded test image {i + 1} with shape {gray.shape}")
+
+            # Start timing
+            start_time = cv2.getTickCount()
+            print(f"[DEBUG] Starting SIFT computation for Image {i + 1}...")
+
+            # Run custom SIFT
+            keypoints, descriptors = computeKeypointsAndDescriptors(gray)
+
+            end_time = cv2.getTickCount()
+            time_taken = (end_time - start_time) / cv2.getTickFrequency()
+            time_string += f"img{i+1}={time_taken:.2f} "
+
+            self.sift_time_label.setText(time_string)
+            print(f"[DEBUG] SIFT completed for Image {i + 1} in {time_taken:.4f} sec")
+            print(f"[DEBUG] Keypoints: {len(keypoints)} | Descriptors shape: {descriptors.shape}")
+
+            keypoints_list.append(keypoints)
+            descriptors_list.append(descriptors)
+
+            # Draw keypoints on original image
+            result = cv2.drawKeypoints(original, keypoints, None,
+                                       flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+            result_images.append(result)
+
+        # Save results to object attributes
+        self.keypoints1, self.keypoints2 = keypoints_list
+        self.descriptors1, self.descriptors2 = descriptors_list
+
+        # Enable radio buttons
         self.sift_done = True
         self.ssd_rb.setEnabled(True)
         self.ncc_rb.setEnabled(True)
-        
+
+        # Display both keypoint visualizations
+        self.display_images(result_images[0], result_images[1])
 
 
 if __name__ == "__main__":
