@@ -1,12 +1,17 @@
+import numpy as np
+
 from pysift import computeKeypointsAndDescriptors
 import sys
 from tkinter import filedialog
-from PyQt5.QtWidgets import QMainWindow, QApplication, QScrollArea, QWidget ,QVBoxLayout, QRadioButton, QSlider, QLabel, QPushButton, QLineEdit, QCheckBox, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QApplication, QScrollArea, QWidget, QVBoxLayout, QRadioButton, QSlider, QLabel, \
+    QPushButton, QLineEdit, QCheckBox, QHBoxLayout, QFileDialog
 from PyQt5 import uic
 import cv2
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from FeatureMatching import Matching
+from FeatureExtractor import extract_corners
+
 
 class MainApp(QMainWindow):
     def __init__(self):
@@ -17,12 +22,16 @@ class MainApp(QMainWindow):
         scroll = QScrollArea()
         scroll.setWidget(self.ui)
         self.setCentralWidget(scroll)
-        self.resize(1360, 768) 
+        self.resize(1360, 768)
         ######## end of resolution fix 
         
         self.main_widget = self.ui.findChild(QWidget, "widget")
         self.load_btn = self.ui.findChild(QPushButton, "load_button")
         self.load_btn.clicked.connect(self.load_button_clicked)
+
+        self.harris_time_label = self.ui.findChild(QLabel, "Gaussian")
+        self.corner_btn = self.ui.findChild(QPushButton, "ChainCodeButton")
+        self.corner_btn.clicked.connect(self.corner_button_clicked)
         
         ## sift flag, to make sure feature matching options are off until sift is done.
         self.sift_done = False
@@ -71,8 +80,10 @@ class MainApp(QMainWindow):
         self.matching_time_label = self.ui.findChild(QLabel,"matching_time_label")
         
     def load_button_clicked(self):
-        file_path1 = filedialog.askopenfilename(title="Select Image 1")
-        file_path2 = filedialog.askopenfilename(title="Select Image 2")
+        file_path1, _ = QFileDialog.getOpenFileName(self, "Open Image", "", "Image Files (*.png *.jpg *.jpeg *.bmp)")
+        file_path2, _ = QFileDialog.getOpenFileName(self, "Open Image", "", "Image Files (*.png *.jpg *.jpeg *.bmp)")
+        # file_path1 = filedialog.askopenfilename(title="Select Image 1")
+        # file_path2 = filedialog.askopenfilename(title="Select Image 2")
         if file_path1 and file_path2:
             self.image1_path = file_path1
             self.image2_path = file_path2
@@ -162,8 +173,36 @@ class MainApp(QMainWindow):
         canvas = matcher.visualize_matches(matches)
         layout.addWidget(canvas)
         self.main_widget.setLayout(layout)
-        
 
+    def corner_button_clicked(self):
+        if self.image1 is None or self.image2 is None:
+            print("Please load images first.")
+            return
+
+        # Extract corners
+        time_string = " "
+        corners1, time_taken = extract_corners(self.image1)
+        time_string += f"img1={time_taken:.2f} seconds\n"
+
+        corners2, time_taken = extract_corners(self.image2)
+        time_string += f"img2={time_taken:.2f} seconds"
+
+        self.harris_time_label.setText(time_string)
+
+        image1_with_corners = self.image1.copy()
+        image2_with_corners = self.image2.copy()
+
+        corner1_coords = np.argwhere(corners1)
+        corner2_coords = np.argwhere(corners2)
+
+        for y, x in corner1_coords:
+            cv2.circle(image1_with_corners, (x, y), radius=2, color=(255, 0, 0), thickness=-1)
+
+        for y, x in corner2_coords:
+            cv2.circle(image2_with_corners, (x, y), radius=2, color=(255, 0, 0), thickness=-1)
+
+        # Display corners
+        self.display_images(image1_with_corners, image2_with_corners)
     
     def display_images(self, image1, image2):   
         # Clear existing widgets from the layout
