@@ -1,4 +1,5 @@
 import numpy as np
+from pygments.lexer import using
 
 from pysift import computeKeypointsAndDescriptors
 import sys
@@ -16,7 +17,7 @@ from FeatureExtractor import extract_corners
 class MainApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.ui = uic.loadUi("Task03.ui")
+        self.ui = uic.loadUi("Task03 (1).ui")
         
         ##### bc of resolution issues for my laptop, comment out if not needed!!!
         scroll = QScrollArea()
@@ -32,11 +33,23 @@ class MainApp(QMainWindow):
         self.harris_time_label = self.ui.findChild(QLabel, "Gaussian")
         self.corner_btn = self.ui.findChild(QPushButton, "ChainCodeButton")
         self.corner_btn.clicked.connect(self.corner_button_clicked)
-        
+
+        self.harris_radio_button = self.ui.findChild(QRadioButton, "ssd_radio_button_3")
+        self.lambda_radio_button = self.ui.findChild(QRadioButton, "ssd_radio_button_2")
+        self.harris_radio_button.setChecked(True)
+
+        self.harris_lambda_threshold_label = self.ui.findChild(QLabel, "threshold_label")
+        self.harris_lambda_threshold_slider = self.ui.findChild(QSlider, "thresholdslider")
+        self.harris_lambda_threshold_slider.setMinimum(80)
+        self.harris_lambda_threshold_slider.setMaximum(99)
+        self.harris_lambda_threshold_slider.valueChanged.connect(self.harris_lambda_threshold_control)
+        self.harris_lambda_threshold_slider.setValue(95)
+
+
         ## sift flag, to make sure feature matching options are off until sift is done.
         self.sift_done = False
-        self.sift_time_label = self.ui.findChild(QLabel,"Gaussian_2")
-        self.sift_button = self.ui.findChild(QPushButton,"sift_button")
+        self.sift_time_label = self.ui.findChild(QLabel, "Gaussian_2")
+        self.sift_button = self.ui.findChild(QPushButton, "sift_button")
 
         self.sift_button.clicked.connect(self.sift_button_clicked)
 
@@ -101,7 +114,12 @@ class MainApp(QMainWindow):
     def ssd_threshold_control(self):
         value = self.ssd_slider.value()
         self.ssd_threshold = value
-        self.ssd_label.setText(f"{self.ssd_threshold:.0f}") 
+        self.ssd_label.setText(f"{self.ssd_threshold:.0f}")
+
+    def harris_lambda_threshold_control(self):
+        value = self.harris_lambda_threshold_slider.value()
+        harris_lambda_threshold = value / 100.0
+        self.harris_lambda_threshold_label.setText(f"{harris_lambda_threshold:.2f}")
         
     
     def ncc_threshold_control(self):
@@ -179,12 +197,15 @@ class MainApp(QMainWindow):
             print("Please load images first.")
             return
 
+        method = "lambda" if self.lambda_radio_button.isChecked() else "harris"
+        threshold = self.harris_lambda_threshold_slider.value() / 100.0
+
         # Extract corners
         time_string = " "
-        corners1, time_taken = extract_corners(self.image1)
+        corners1, time_taken = extract_corners(self.image1, using=method, threshold=threshold)
         time_string += f"img1={time_taken:.2f} seconds\n"
 
-        corners2, time_taken = extract_corners(self.image2)
+        corners2, time_taken = extract_corners(self.image2, using=method, threshold=threshold)
         time_string += f"img2={time_taken:.2f} seconds"
 
         self.harris_time_label.setText(time_string)
