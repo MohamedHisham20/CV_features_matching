@@ -8,16 +8,14 @@ import logging
 # Global variables #
 ####################
 
-logger = logging.getLogger(__name__)
 float_tolerance = 1e-7
 
 #################
 # Main function #
 #################
 
-def computeKeypointsAndDescriptors(image, sigma=1.6, num_intervals=3, assumed_blur=0.5, image_border_width=5):
-    """Compute SIFT keypoints and descriptors for an input image
-    """
+def extractKeyPointsandDescriptor(image, sigma=1.6, num_intervals=3, assumed_blur=0.5, image_border_width=5):
+
     image = image.astype('float32')
     base_image = generateBaseImage(image, sigma, assumed_blur)
     num_octaves = computeNumberOfOctaves(base_image.shape)
@@ -35,12 +33,11 @@ def computeKeypointsAndDescriptors(image, sigma=1.6, num_intervals=3, assumed_bl
 #########################
 
 def generateBaseImage(image, sigma, assumed_blur):
-    """Generate base image from input image by upsampling by 2 in both directions and blurring
-    to generate the image pyramid
-    uses DoG instead of LoG because it is faster
-    sigma_diff: to calculate the additional blur needed after upsampling for the DoG
-    """
-    logger.debug('Generating base image...')
+
+    #sigma_diff: to calculate the additional blur needed after upsampling for the DoG
+    #proof: https://math.stackexchange.com/questions/3159846/what-is-the-resulting-sigma-after-applying-successive-gaussian-blur
+
+    print('Generating base image...')
     image = resize(image, (0, 0), fx=2, fy=2, interpolation=INTER_LINEAR)
     #DoG blur .. used 2*assumed_blur for the upsampling as we upsample by 2 in both directions
     #  and the squard difference to get the variance
@@ -49,19 +46,17 @@ def generateBaseImage(image, sigma, assumed_blur):
     return GaussianBlur(image, (0, 0), sigmaX=sigma_diff, sigmaY=sigma_diff)  # the image blur is now sigma instead of assumed_blur
 
 def computeNumberOfOctaves(image_shape):
-    """Compute number of octaves in image pyramid as function of base image shape (OpenCV default)
-    The number of octaves is the number of times the image can be downsampled by a factor of 2 before it becomes too small to be useful.
-    eq: min_shape/(2**num_octaves) = 1
+    """eq: min_shape/(2**num_octaves) = 1
     """
     return int(round(log(min(image_shape)) / log(2) - 1))
 
 def generateGaussianKernels(sigma, num_intervals):
-    """Generate list of gaussian kernels at which to blur the input image. Default values of sigma, intervals, and octaves follow section 3 of Lowe's paper.
+    """ section 3 of Lowe's paper.
     """
-    logger.debug('Generating scales...')
-    num_images_per_octave = num_intervals + 3
-    k = 2 ** (1. / num_intervals)
-    gaussian_kernels = zeros(num_images_per_octave)  # scale of gaussian blur necessary to go from one blur scale to the next within an octave
+    print('Generating scales...')
+    num_images_per_octave = num_intervals + 3 # +3 for the extra images in the octave
+    k = 2 ** (1. / num_intervals)   #  factor for the Gaussian kernel
+    gaussian_kernels = zeros(num_images_per_octave)
     gaussian_kernels[0] = sigma
 
     for image_index in range(1, num_images_per_octave):
@@ -73,7 +68,7 @@ def generateGaussianKernels(sigma, num_intervals):
 def generateGaussianImages(image, num_octaves, gaussian_kernels):
     """Generate scale-space pyramid of Gaussian images
     """
-    logger.debug('Generating Gaussian images...')
+    print('Generating Gaussian images...')
     gaussian_images = []
 
     for octave_index in range(num_octaves):
@@ -83,6 +78,7 @@ def generateGaussianImages(image, num_octaves, gaussian_kernels):
             image = GaussianBlur(image, (0, 0), sigmaX=gaussian_kernel, sigmaY=gaussian_kernel)
             gaussian_images_in_octave.append(image)
         gaussian_images.append(gaussian_images_in_octave)
+        # take the third image from last to be base of next octave (where sigma = 2*original_sigma)
         octave_base = gaussian_images_in_octave[-3]
         image = resize(octave_base, (int(octave_base.shape[1] / 2), int(octave_base.shape[0] / 2)), interpolation=INTER_NEAREST)
     return array(gaussian_images, dtype=object)
@@ -90,7 +86,7 @@ def generateGaussianImages(image, num_octaves, gaussian_kernels):
 def generateDoGImages(gaussian_images):
     """Generate Difference-of-Gaussians image pyramid
     """
-    logger.debug('Generating Difference-of-Gaussian images...')
+    print('Generating Difference-of-Gaussian images...')
     dog_images = []
 
     for gaussian_images_in_octave in gaussian_images:
@@ -105,9 +101,9 @@ def generateDoGImages(gaussian_images):
 ###############################
 
 def findScaleSpaceExtrema(gaussian_images, dog_images, num_intervals, sigma, image_border_width, contrast_threshold=0.04):
-    """Find pixel positions of all scale-space extrema in the image pyramid
+    """positions for extrema in the image pyramid
     """
-    logger.debug('Finding scale-space extrema...')
+    print('Finding scale-space extrema...')
     threshold = floor(0.5 * contrast_threshold / num_intervals * 255)  # from OpenCV implementation
     keypoints = []
 
@@ -147,9 +143,9 @@ def isPixelAnExtremum(first_subimage, second_subimage, third_subimage, threshold
     return False
 
 def localizeExtremumViaQuadraticFit(i, j, image_index, octave_index, num_intervals, dog_images_in_octave, sigma, contrast_threshold, image_border_width, eigenvalue_ratio=10, num_attempts_until_convergence=5):
-    """Iteratively refine pixel positions of scale-space extrema via quadratic fit around each extremum's neighbors
+    """loop to enhance pixel positions of scale-space extrema via quadratic fit around each extremum's neighbors
     """
-    logger.debug('Localizing scale-space extrema...')
+    print('Localizing scale-space extrema...')
     extremum_is_outside_image = False
     image_shape = dog_images_in_octave[0].shape
     for attempt_index in range(num_attempts_until_convergence):
@@ -171,10 +167,10 @@ def localizeExtremumViaQuadraticFit(i, j, image_index, octave_index, num_interva
             extremum_is_outside_image = True
             break
     if extremum_is_outside_image:
-        logger.debug('Updated extremum moved outside of image before reaching convergence. Skipping...')
+        print('Updated extremum moved outside of image before reaching convergence. Skipping...')
         return None
     if attempt_index >= num_attempts_until_convergence - 1:
-        logger.debug('Exceeded maximum number of attempts without reaching convergence for this extremum. Skipping...')
+        print('Exceeded maximum number of attempts without reaching convergence for this extremum. Skipping...')
         return None
     functionValueAtUpdatedExtremum = pixel_cube[1, 1, 1] + 0.5 * dot(gradient, extremum_update)
     if abs(functionValueAtUpdatedExtremum) * num_intervals >= contrast_threshold:
@@ -231,7 +227,7 @@ def computeKeypointsWithOrientations(keypoint, octave_index, gaussian_image, rad
       with a Gaussian weighting. This makes pixels farther from the keypoint
        have less of an influence on the histogram
     """
-    logger.debug('Computing keypoint orientations...')
+    print('Computing keypoint orientations...')
     keypoints_with_orientations = []
     image_shape = gaussian_image.shape
 
@@ -351,7 +347,7 @@ def unpackOctave(keypoint):
 def generateDescriptors(keypoints, gaussian_images, window_width=4, num_bins=8, scale_multiplier=3, descriptor_max_value=0.2):
     """Generate descriptors for each keypoint
     """
-    logger.debug('Generating descriptors...')
+    print('Generating descriptors...')
     descriptors = []
 
     for keypoint in keypoints:
@@ -372,7 +368,7 @@ def generateDescriptors(keypoints, gaussian_images, window_width=4, num_bins=8, 
         histogram_tensor = zeros((window_width + 2, window_width + 2, num_bins))   # first two dimensions are increased by 2 to account for border effects
 
         # Descriptor window size (described by half_width) follows OpenCV convention
-        hist_width = scale_multiplier * 0.5 * scale * keypoint.size
+        hist_width = scale_multiplier * 0.5 * scale * keypoint.size #radius of the descriptor region around the keypoint.
         half_width = int(round(hist_width * sqrt(2) * (window_width + 1) * 0.5))   # sqrt(2) corresponds to diagonal length of a pixel
         half_width = int(min(half_width, sqrt(num_rows ** 2 + num_cols ** 2)))     # ensure half_width lies within image
 

@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 
-from pysift import computeKeypointsAndDescriptors
+from SIFT import extractKeyPointsandDescriptor
 
 
 def test():
@@ -17,7 +17,7 @@ def test():
     start_time = cv.getTickCount()
     print(f"[DEBUG] Starting SIFT computation...{start_time}")
     # Run custom SIFT implementation
-    keypoints, descriptors = computeKeypointsAndDescriptors(image)
+    keypoints, descriptors = extractKeyPointsandDescriptor(image)
     end_time = cv.getTickCount()
     time_taken = (end_time - start_time) / cv.getTickFrequency()
     print(f"[DEBUG] SIFT computation completed in {time_taken:.4f} seconds")

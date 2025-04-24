@@ -1,7 +1,7 @@
 import numpy as np
 from pygments.lexer import using
 
-from pysift import computeKeypointsAndDescriptors
+from SIFT import extractKeyPointsandDescriptor
 import sys
 from tkinter import filedialog
 from PyQt5.QtWidgets import QMainWindow, QApplication, QScrollArea, QWidget, QVBoxLayout, QRadioButton, QSlider, QLabel, \
@@ -294,7 +294,7 @@ class MainApp(QMainWindow):
             print(f"[DEBUG] Starting SIFT computation for Image {i + 1}...")
 
             # Run custom SIFT
-            keypoints, descriptors = computeKeypointsAndDescriptors(gray)
+            keypoints, descriptors = extractKeyPointsandDescriptor(gray)
 
             end_time = cv2.getTickCount()
             time_taken = (end_time - start_time) / cv2.getTickFrequency()

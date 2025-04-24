@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-import pysift
+from SIFT import extractKeyPointsandDescriptor
 from matplotlib import pyplot as plt
 import logging
 logger = logging.getLogger(__name__)
@@ -11,8 +11,8 @@ img1 = cv2.imread('feature_imgs/poaaaaa.jpg', 0)           # queryImage
 img2 = cv2.imread('feature_imgs/hp4.jpg', 0)  # trainImage
 
 # Compute SIFT keypoints and descriptors
-kp1, des1 = pysift.computeKeypointsAndDescriptors(img1)
-kp2, des2 = pysift.computeKeypointsAndDescriptors(img2)
+kp1, des1 = extractKeyPointsandDescriptor(img1)
+kp2, des2 = extractKeyPointsandDescriptor(img2)
 
 # Initialize and use FLANN
 FLANN_INDEX_KDTREE = 0
