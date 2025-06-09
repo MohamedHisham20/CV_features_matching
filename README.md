@@ -45,21 +45,21 @@ Lambda negative before thresholding:
 
 Histogram of harris and  lambda \-ve values:  
 <div style="display: flex; align-items: center; justify-content: space-around;">
-  <img src="images/harris_hist.png" alt="Harris Histogram" width="50%">
-  <img src="images/lambda_hist.png" alt="Lambda Histogram" width="50%">
+  <img src="images/harris_hist.png" alt="Harris Histogram" width="45%">
+  <img src="images/lambda_hist.png" alt="Lambda Histogram" width="45%">
 </div>
 
 Harris and Lambda after thresholding:
 
 <div style="display: flex; align-items: center; justify-content: space-around;">
-  <img src="images/harris_a_thres.png" alt="Harris after threshold" width="50%">
-  <img src="images/lambda_a_thres.png" alt="Lambda after threshold" width="50%">
+  <img src="images/harris_a_thres.png" alt="Harris after threshold" width="45%">
+  <img src="images/lambda_a_thres.png" alt="Lambda after threshold" width="45%">
 </div>
 
 Corners after non-max suppression:  
 <div style="display: flex; align-items: center; justify-content: space-around;">
-  <img src="images/harris_corners.png" alt="Harris corners" width="50%">
-  <img src="images/lambda_corners.png" alt="Lambda corners" width="50%">
+  <img src="images/harris_corners.png" alt="Harris corners" width="45%">
+  <img src="images/lambda_corners.png" alt="Lambda corners" width="45%">
 </div>
 ---
 
@@ -213,7 +213,7 @@ Feature matching is a critical step in computer vision applications like object 
 
 Threshold \- 20000, Matches \- 54, Time \- 11.95 secs 
 <div style="display: flex; align-items: center; justify-content: space-around;">
-  <img src="images/ssd1.png" alt="SSD 1" width="60%">
+  <img src="images/ssd1.png" alt="SSD 1" width="55%">
   <img src="images/ssd1_sett.png" alt="SSD 1 Settings" width="40%">
 </div>
 
@@ -221,7 +221,7 @@ Threshold \- 20000, Matches \- 54, Time \- 11.95 secs
 Threshold \- 30000, Matches \- 82, Time \- 14.3 secs
 
 <div style="display: flex; align-items: center; justify-content: space-around;">
-  <img src="images/ssd2.png" alt="SSD 2" width="60%">
+  <img src="images/ssd2.png" alt="SSD 2" width="55%">
   <img src="images/ssd2_sett.png" alt="SSD 2 Settings" width="40%">
 </div>
 
@@ -230,14 +230,14 @@ Threshold \- 30000, Matches \- 82, Time \- 14.3 secs
 Threshold \- 0.95, Matches \- 75, Time \- 27.75 secs
 
 <div style="display: flex; align-items: center; justify-content: space-around;">
-  <img src="images/ncc1.png" alt="NCC 1" width="60%">
+  <img src="images/ncc1.png" alt="NCC 1" width="55%">
   <img src="images/ncc1_sett.png" alt="NCC 1 Settings" width="40%">
 </div>
 
 Threshold \- 0.90, Matches \- 168, Time \- 26.04
 
 <div style="display: flex; align-items: center; justify-content: space-around;">
-  <img src="images/ncc2.png" alt="NCC 2" width="60%">
+  <img src="images/ncc2.png" alt="NCC 2" width="55%">
   <img src="images/ncc2_sett.png" alt="NCC 2 Settings" width="40%">
 </div>
 
